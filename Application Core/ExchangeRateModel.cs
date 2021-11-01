@@ -8,8 +8,8 @@ namespace Application_Core
     public class ExchangeRateModel
     {
         public int ExchangeRateModelId { get; set; }
-        public string fromCurrencyCode { get; set; }
-        public string toCurrencyCode { get; set; }
+        public string FromCurrencyCode { get; set; }
+        public string ToCurrencyCode { get; set; }
         public string ExchangeRate { get; set; }
         public DateTime Date { get; set; }
     }

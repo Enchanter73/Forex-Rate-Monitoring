@@ -38,8 +38,8 @@ namespace Forex_Rate_Monitoring.Controllers {
                 using (var ctx = new FER_Context())
                 {
                     var currER = new ExchangeRateModel() { 
-                        toCurrencyCode = element.GetProperty("1. From_Currency Code").ToString(),
-                        fromCurrencyCode = element.GetProperty("3. To_Currency Code").ToString(),
+                        ToCurrencyCode = element.GetProperty("1. From_Currency Code").ToString(),
+                        FromCurrencyCode = element.GetProperty("3. To_Currency Code").ToString(),
                         ExchangeRate = element.GetProperty("5. Exchange Rate").ToString(),
                         Date = Convert.ToDateTime(element.GetProperty("6. Last Refreshed").ToString())
                     };
