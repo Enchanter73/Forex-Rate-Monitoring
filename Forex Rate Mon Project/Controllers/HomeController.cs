@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Net;
 using System.Configuration;
-using Infastructure;
-using Application_Core;
+using Worker;
+using ApplicationCore;
 
 namespace Forex_Rate_Monitoring.Controllers {
     public class HomeController : Controller {
@@ -31,9 +31,6 @@ namespace Forex_Rate_Monitoring.Controllers {
 
             foreach (JsonElement element in json_data.Values)
             {
-                //string fromCurrencyCode = element.GetProperty("1. From_Currency Code").ToString();
-                //string toCurrencyCode = element.GetProperty("3. To_Currency Code").ToString();
-                //string exchangeRate1 = element.GetProperty("5. Exchange Rate").ToString();
 
                 using (var ctx = new FER_Context())
                 {

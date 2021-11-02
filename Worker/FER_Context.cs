@@ -1,11 +1,11 @@
-﻿using Application_Core;
+﻿using ApplicationCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infastructure
+namespace Worker
 {
     public class FER_Context: DbContext
     {
