@@ -40,12 +40,12 @@ namespace Infastructure.Data
                         };
 
                         ctx.CurrentExchangeRates.Add(currER);
-                        ctx.SaveChanges();
+                        
                     }
                 }
-                
             }
- 
+            ctx.SaveChanges();
+
         }
 
         public static IEnumerable<ExchangeRateModel> GetFromDB()
