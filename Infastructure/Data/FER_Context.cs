@@ -1,4 +1,4 @@
-﻿using ApplicationCore;
+﻿using ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,14 +11,25 @@ namespace Infastructure
     {
         public FER_Context(): base("ForexDB")
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<FER_Context, Migrations.Configuration>());
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<FER_Context, Migrations.Configuration>());
         }
 
         public DbSet<ExchangeRateModel> CurrentExchangeRates { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-        }
+
+            var entityMethod = typeof(DbModelBuilder).GetMethod("Entity");
+
+            foreach (Type type in ...)
+            {
+                entityMethod.MakeGenericMethod(type)
+                    .Invoke(modelBuilder, new object[] { });
+            }
+            base.OnModelCreating(modelBuilder);    
+
+        }*/
     }
+
 }

@@ -10,6 +10,7 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            ContextKey = "Infastructure.FER_Context";
         }
 
         protected override void Seed(Infastructure.FER_Context context)

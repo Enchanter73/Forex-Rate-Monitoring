@@ -28,7 +28,7 @@ namespace WorkerService
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
-                Class1.getData();
+                DBOperations.AddToDB();
 
                 await Task.Delay(1800000, stoppingToken);
             }

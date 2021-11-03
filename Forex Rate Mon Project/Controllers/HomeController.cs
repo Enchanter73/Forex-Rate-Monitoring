@@ -10,7 +10,9 @@ using System.Text.Json;
 using System.Net;
 using System.Configuration;
 using WorkerService;
-using ApplicationCore;
+using ApplicationCore.Models;
+using Infastructure;
+using Infastructure.Data;
 
 namespace Forex_Rate_Monitoring.Controllers {
     public class HomeController : Controller {
@@ -21,7 +23,7 @@ namespace Forex_Rate_Monitoring.Controllers {
         }
 
         public IActionResult Index() {
-            return View("Index");
+            return View("Index", DBOperations.GetFromDB());
         }
 
         public IActionResult Privacy() {
