@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,7 +15,7 @@ namespace ApplicationCore.Models
         public int CurrencyId { get; set; }
         
         [Column("CurrencyCode")]
-        [MaxLength(8)]
+        [JsonProperty("")]
         public string CurrencyCode { get; set; }
 
         [Column("ExchangeRate")]

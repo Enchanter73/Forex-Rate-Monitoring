@@ -8,13 +8,17 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Newtonsoft;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Infastructure.Data
 {
     public class DBOperations
     {
         static FER_Context ctx = new FER_Context();
-        public static void AddToDB()
+        public static async Task AddToDB()
         {
             string key = ConfigurationManager.AppSettings.Get("API-KEY");
 
@@ -28,9 +32,15 @@ namespace Infastructure.Data
                     string QUERY_URL = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=" + from + "&to_currency=" + to + "&apikey=" + key;
                     Uri queryUri = new Uri(QUERY_URL);
 
-                    dynamic json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(new WebClient().DownloadString(queryUri));
+                    HttpClient client = new HttpClient();
+                    var response = await client.GetAsync(queryUri);
 
-                    foreach (JsonElement element in json_data.Values)
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    var x = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
+
+                    //dynamic json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(new WebClient().DownloadString(queryUri));
+
+                    foreach (JsonElement element in x.Values)
                     {
                         var currER = new ExchangeRateModel()
                         {
