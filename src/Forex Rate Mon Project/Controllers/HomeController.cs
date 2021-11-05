@@ -23,7 +23,7 @@ namespace Forex_Rate_Monitoring.Controllers {
         }
 
         public IActionResult Index() {
-            return View("Index", DBOperations.GetFromDB());
+            return View("Index", DbInitializer.GetFromDB());
         }
 
         public IActionResult Privacy() {
