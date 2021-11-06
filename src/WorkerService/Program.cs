@@ -15,7 +15,6 @@ namespace WorkerService
 {
     public class Program
     {
-        IConfiguration configuration;
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
@@ -52,6 +51,5 @@ namespace WorkerService
                         options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ForexDB;Trusted_Connection=True;MultipleActiveResultSets=true"));
                     
                 });
-
     }
 }

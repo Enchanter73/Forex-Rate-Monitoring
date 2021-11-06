@@ -29,17 +29,25 @@ namespace WorkerService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            var now = DateTime.Now;
+            DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 0, 0);
+            TimeSpan t = startDate.Subtract(now);
+
+            t = t.Hours < 0 ? startDate.AddDays(1).Subtract(now) : t.Hours < -9 ? startDate.AddDays(2).Subtract(now) : t;
+
+            await Task.Delay((t.Hours*3600 + t.Minutes*60 + t.Seconds)*1000, stoppingToken);
+
             while (!stoppingToken.IsCancellationRequested)
-            {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            {        
+                _logger.LogInformation("Worker running at: {time}", DateTime.Now);            
 
                 using(IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<FER_Context>();
-                    getData(context);
+                    //getData(context);
                 }
 
-                await Task.Delay(/*1800000*/10000, stoppingToken);
+                await Task.Delay(1800000, stoppingToken);
             }
         }
 
