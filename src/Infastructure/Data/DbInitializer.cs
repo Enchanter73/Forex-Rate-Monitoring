@@ -3,7 +3,6 @@ using ApplicationCore;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Net;
 using System.Linq;
 using System.Text;
@@ -42,11 +41,6 @@ namespace Infastructure.Data
                 ctx.SaveChanges();
             }
  
-        }
-
-        /*public static IEnumerable<ExchangeRateModel> GetFromDB()
-        {
-            return ctx.ExchangeRates;
-        }*/
+        }    
     }
 }

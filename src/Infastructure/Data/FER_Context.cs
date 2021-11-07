@@ -15,12 +15,18 @@ namespace Infastructure
 
         public DbSet<Currency> Currency { get; set; }
         public DbSet<ExchangeRateModel> ExchangeRates { get; set; }
-
+        public DbSet<History> History { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Currency>().ToTable("Currency");
-            modelBuilder.Entity<ExchangeRateModel>().ToTable("ExchangeRates");     
+            modelBuilder.Entity<Currency>().ToTable("Currency").HasKey(c => new { c.CurrencyId });
+            modelBuilder.Entity<Currency>().HasMany(a => a.FromExchangeRateModels).WithOne(b => b.FromCurrency);
+            modelBuilder.Entity<Currency>().HasMany(a => a.ToExchangeRateModels).WithOne(b => b.ToCurrency);
+
+            modelBuilder.Entity<ExchangeRateModel>().ToTable("ExchangeRates").HasKey(c => new { c.ExchangeId });
+            modelBuilder.Entity<ExchangeRateModel>().HasMany(a => a.Histories).WithOne(b => b.ExchangeRateModel);
+
+            modelBuilder.Entity<History>().ToTable("History").HasKey(c => new { c.HistoryId });
         }
     }
 

@@ -10,23 +10,20 @@ namespace ApplicationCore.Models
 {
     public class ExchangeRateModel
     {
-        [Key]
         public int ExchangeId { get; set; }
         
-        [Column("FromCurrencyCodeId")]
-        [JsonProperty("1. From_Currency Code")]
-        public string FromCurrencyCode { get; set; }
+        //public int FromCurrencyCodeId { get; set; }
+        public Currency FromCurrency { get; set; }
 
-        [Column("ToCurrencyCodeId")]
-        [JsonProperty("3. To_Currency Code")]
-        public string ToCurrencyCode { get; set; }
+        //public int ToCurrencyCodeId { get; set; }
+        public Currency ToCurrency { get; set; }
 
         [Column("ExchangeRate")]
-        [JsonProperty("5. Exchange Rate")]
         public string ExchangeRate { get; set; }
 
         [Column("Date")]
-        [JsonProperty("6. Last Refreshed")]
         public DateTime Date { get; set; }
+
+        public List<History> Histories { get; set; }
     }
 }

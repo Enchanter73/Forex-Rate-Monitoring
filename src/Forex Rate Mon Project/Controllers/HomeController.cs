@@ -17,13 +17,16 @@ using Infastructure.Data;
 namespace Forex_Rate_Monitoring.Controllers {
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
+        private FER_Context _ctx;
 
-        public HomeController(ILogger<HomeController> logger) {
+        public HomeController(ILogger<HomeController> logger, FER_Context ctx) {
             _logger = logger;
+            _ctx = ctx;
         }
 
         public IActionResult Index() {
-            return View("Index", DbInitializer.GetFromDB());
+            ViewBag.MyData = DBReader.GetFromDB(_ctx);
+            return View();
         }
 
         public IActionResult Privacy() {

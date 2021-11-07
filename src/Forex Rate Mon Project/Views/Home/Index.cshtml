@@ -1,18 +1,16 @@
-﻿@Model IEnumerable<>
-@{
+﻿@{
     ViewData["Title"] = "REAL TIME CURRENCY EXCHANGE RATE";
 }
-
     <table class="table table-bordered table-responsive table-hover">
         <tr>
             <td>CurrencyCode</td>
             <td>ExchangeRate</td>
             <td>Date</td>
         </tr>
-        @foreach (var e in Model)
+        @foreach (var e in ViewBag.MyData)
         {
             <tr>
-                <td>@e.CurrencyCode</td>
+                <td>@e.FromCurrencyCode/@e.ToCurrencyCode</td>
                 <td>@e.ExchangeRate</td>
                 <td>@e.Date</td>
             </tr>

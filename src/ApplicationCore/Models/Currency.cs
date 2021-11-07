@@ -9,10 +9,12 @@ namespace ApplicationCore.Models
 {
     public class Currency
     {
-        [Key]
         public int CurrencyId { get; set; }
 
         [Column("CurrencyName")]
         public string CurrencyName { get; set; }
+
+        public List<ExchangeRateModel> FromExchangeRateModels { get; set; }
+        public List<ExchangeRateModel> ToExchangeRateModels { get; set; }
     }
 }
