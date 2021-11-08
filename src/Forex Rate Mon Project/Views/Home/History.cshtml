@@ -10,9 +10,9 @@
         <td>ExchangeRate</td>
         <td>Date</td>
     </tr>
-    @foreach (var e in exchangeRates) {
+    @foreach (var e in histories) {
         <tr>
-            <td>@e.FromCurrency.CurrencyName/@e.ToCurrency.CurrencyName</td>
+            <td>@e.FromCurrencyCode.CurrencyName/@e.ToCurrencyCode.CurrencyName</td>
             <td>@e.ExchangeRate</td>
             <td>@e.Date</td>
         </tr>
