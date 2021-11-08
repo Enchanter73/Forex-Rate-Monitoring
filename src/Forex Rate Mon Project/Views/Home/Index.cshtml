@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Current Exchange Rates";
-    var currencies = ViewData["Currencies"] as List<Currency>;
     var exchangeRates = ViewData["ExchangeRates"] as List<ExchangeRateModel>;
 }
     <table class="table table-bordered table-responsive table-hover">
@@ -12,7 +11,7 @@
         @foreach (var e in exchangeRates)
         {
             <tr>
-                <td>@e.FromCurrency.CurrencyName/@e.ToCurrency.CurrencyName</td>
+                <td>@Html.ActionLink(@e.FromCurrency.CurrencyName +"/"+ @e.ToCurrency.CurrencyName, "History", "Home", new { from = e.FromCurrency.CurrencyId, to = e.ToCurrency.CurrencyId }, null)</td>
                 <td>@e.ExchangeRate</td>
                 <td>@e.Date</td>
             </tr>

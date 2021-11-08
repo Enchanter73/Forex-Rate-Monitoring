@@ -30,10 +30,11 @@ namespace Forex_Rate_Monitoring.Controllers {
             return View();
         }
 
-        public IActionResult History() {
+        public IActionResult History(int from, int to) {
             ViewData["Currencies"] = DBReader.GetCurrenciesFromDB(_ctx);
             ViewData["ExchangeRates"] = DBReader.GetExchangeRatesFromDB(_ctx);
-            ViewData["Histories"] = DBReader.GetHistoriesFromDB(_ctx);
+            IEnumerable<History> ratesHistory = DBReader.GetHistoriesFromDB(_ctx).Where(a => a.FromCurrencyCode.CurrencyId == from && a.ToCurrencyCode.CurrencyId == to);
+            ViewData["Histories"] = ratesHistory;
             return View();
         }
 

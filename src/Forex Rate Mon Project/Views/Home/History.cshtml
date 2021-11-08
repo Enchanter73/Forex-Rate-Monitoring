@@ -2,7 +2,7 @@
     ViewData["Title"] = "History Data";
     var currencies = ViewData["Currencies"] as List<Currency>;
     var exchangeRates = ViewData["ExchangeRates"] as List<ExchangeRateModel>;
-    var histories = ViewData["Histories"] as List<History>;
+    var histories = ViewData["Histories"] as IEnumerable<History>;
 }
 <table class="table table-bordered table-responsive table-hover">
     <tr>
