@@ -12,10 +12,8 @@ namespace ApplicationCore.Models
     {
         public int ExchangeId { get; set; }
         
-        //public int FromCurrencyCodeId { get; set; }
         public Currency FromCurrency { get; set; }
 
-        //public int ToCurrencyCodeId { get; set; }
         public Currency ToCurrency { get; set; }
 
         [Column("ExchangeRate")]

@@ -25,7 +25,15 @@ namespace Forex_Rate_Monitoring.Controllers {
         }
 
         public IActionResult Index() {
-            ViewBag.MyData = DBReader.GetFromDB(_ctx);
+            ViewData["Currencies"] = DBReader.GetCurrenciesFromDB(_ctx);
+            ViewData["ExchangeRates"] = DBReader.GetExchangeRatesFromDB(_ctx);
+            return View();
+        }
+
+        public IActionResult History() {
+            ViewData["Currencies"] = DBReader.GetCurrenciesFromDB(_ctx);
+            ViewData["ExchangeRates"] = DBReader.GetExchangeRatesFromDB(_ctx);
+            ViewData["Histories"] = DBReader.GetHistoriesFromDB(_ctx);
             return View();
         }
 

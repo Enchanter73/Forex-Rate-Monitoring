@@ -21,7 +21,6 @@ namespace ApplicationCore.Models {
         public DateTime Date { get; set; }
 
         [Column("ExchangeId")]
-        //public int ExchangeID { get; set; }
         public ExchangeRateModel ExchangeRateModel { get; set; }
     }
 }

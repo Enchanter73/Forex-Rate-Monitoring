@@ -73,15 +73,17 @@ namespace WorkerService
                         var fromCurrency = element.GetValue("1. From_Currency Code").ToString();
                         var toCurrency = element.GetValue("3. To_Currency Code").ToString();
 
-                        ExchangeRateModel entity = ctx.ExchangeRates.FirstOrDefault(item => item.FromCurrency.CurrencyName == fromCurrency 
-                                                                                            && item.ToCurrency.CurrencyName == toCurrency);
-                                 
+                        ctx.Currency.Any();
+
+                        ExchangeRateModel entity = ctx.ExchangeRates.Where(item => item.FromCurrency.CurrencyName == fromCurrency).FirstOrDefault(item => item.ToCurrency.CurrencyName == toCurrency);
+                        
                         if (entity != null) {
 
                             History history = new History() {
-                                FromCurrencyCode = entity.FromCurrency,
-                                ToCurrencyCode = entity.ToCurrency,
+                                FromCurrencyCode = ctx.Currency.FirstOrDefault(i => i.CurrencyName == fromCurrency),
+                                ToCurrencyCode = ctx.Currency.FirstOrDefault(i => i.CurrencyName == toCurrency),
                                 ExchangeRate = entity.ExchangeRate,
+                                Date = entity.Date,
                                 ExchangeRateModel = entity
                             };
 
@@ -94,12 +96,16 @@ namespace WorkerService
                             ctx.SaveChanges();
                         }
                         else {
-                            ExchangeRateModel rate = new ExchangeRateModel() {
-                                FromCurrency = ctx.Currency.FirstOrDefault(i => i.CurrencyName == fromCurrency),
-                                ToCurrency = ctx.Currency.FirstOrDefault(i => i.CurrencyName == toCurrency),
-                                ExchangeRate = element.GetValue("5. Exchange Rate").ToString(),
-                                Date = ((DateTime)element.GetValue("6. Last Refreshed")),
-                            };
+                            Currency c = new Currency();
+                            ExchangeRateModel rate = new ExchangeRateModel();
+                            c = ctx.Currency.FirstOrDefault(i => i.CurrencyName == fromCurrency);
+                            rate.FromCurrency = c;
+                            c = ctx.Currency.FirstOrDefault(i => i.CurrencyName == toCurrency);
+                            rate.ToCurrency = c;
+                            rate.ExchangeRate = element.GetValue("5. Exchange Rate").ToString();
+                            rate.Date = ((DateTime)element.GetValue("6. Last Refreshed"));
+
+
                             ctx.ExchangeRates.Add(rate);
                             ctx.SaveChanges();
                         }
@@ -107,6 +113,9 @@ namespace WorkerService
                 }
             }
         }
+
+
+
     }
 }
 

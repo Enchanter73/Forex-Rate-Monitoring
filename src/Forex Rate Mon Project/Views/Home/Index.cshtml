@@ -1,5 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "REAL TIME CURRENCY EXCHANGE RATE";
+    ViewData["Title"] = "Current Exchange Rates";
+    var currencies = ViewData["Currencies"] as List<Currency>;
+    var exchangeRates = ViewData["ExchangeRates"] as List<ExchangeRateModel>;
 }
     <table class="table table-bordered table-responsive table-hover">
         <tr>
@@ -7,10 +9,10 @@
             <td>ExchangeRate</td>
             <td>Date</td>
         </tr>
-        @foreach (var e in ViewBag.MyData)
+        @foreach (var e in exchangeRates)
         {
             <tr>
-                <td>@e.FromCurrencyCode/@e.ToCurrencyCode</td>
+                <td>@e.FromCurrency.CurrencyName/@e.ToCurrency.CurrencyName</td>
                 <td>@e.ExchangeRate</td>
                 <td>@e.Date</td>
             </tr>

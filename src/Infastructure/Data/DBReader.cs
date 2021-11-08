@@ -2,12 +2,26 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infastructure.Data {
     public class DBReader {
-        public static IEnumerable<ExchangeRateModel> GetFromDB(FER_Context ctx)
+        public static IList<Currency> GetCurrenciesFromDB(FER_Context ctx)
         {
-            return ctx.ExchangeRates;
+            List<Currency> currencies = ctx.Currency.ToList();
+            return currencies;
+        }
+
+        public static IList<ExchangeRateModel> GetExchangeRatesFromDB(FER_Context ctx) 
+        {
+            List<ExchangeRateModel> exchangeRates = ctx.ExchangeRates.ToList();
+            return exchangeRates;
+        }
+
+        public static IList<History> GetHistoriesFromDB(FER_Context ctx) {
+            List<History> histories = ctx.History.ToList();
+            return histories;
         }
     }
 }
