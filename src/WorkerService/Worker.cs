@@ -30,13 +30,13 @@ namespace WorkerService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var now = DateTime.Now;
+            /*var now = DateTime.Now;
             DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 0, 0);
             TimeSpan t = startDate.Subtract(now);
 
             t = t.Hours < -9 ? startDate.AddDays(1).Subtract(now) : t.Hours < 0 ? startDate.AddDays(2).Subtract(now) : t;
 
-            await Task.Delay((t.Hours*3600 + t.Minutes*60 + t.Seconds)*1000, stoppingToken);
+            await Task.Delay((t.Hours*3600 + t.Minutes*60 + t.Seconds)*1000, stoppingToken);*/
 
             while (!stoppingToken.IsCancellationRequested)
             {        

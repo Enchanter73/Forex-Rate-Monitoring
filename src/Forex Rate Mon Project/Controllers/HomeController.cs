@@ -17,7 +17,7 @@ using Infastructure.Data;
 namespace Forex_Rate_Monitoring.Controllers {
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
-        private FER_Context _ctx;
+        private readonly FER_Context _ctx;
 
         public HomeController(ILogger<HomeController> logger, FER_Context ctx) {
             _logger = logger;

@@ -22,8 +22,6 @@ namespace Infastructure
             modelBuilder.Entity<Currency>().ToTable("Currency").HasKey(c => new { c.CurrencyId });
             modelBuilder.Entity<Currency>().HasMany(a => a.FromExchangeRateModels).WithOne(b => b.FromCurrency);
             modelBuilder.Entity<Currency>().HasMany(a => a.ToExchangeRateModels).WithOne(b => b.ToCurrency);
-            modelBuilder.Entity<Currency>().HasMany(a => a.FromExchangeRateModels).WithOne(b => b.FromCurrency);
-            modelBuilder.Entity<Currency>().HasMany(a => a.ToExchangeRateModels).WithOne(b => b.ToCurrency);
 
             modelBuilder.Entity<ExchangeRateModel>().ToTable("ExchangeRates").HasKey(c => new { c.ExchangeId });
             modelBuilder.Entity<ExchangeRateModel>().HasMany(a => a.Histories).WithOne(b => b.ExchangeRateModel);
