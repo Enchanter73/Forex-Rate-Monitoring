@@ -25,17 +25,16 @@ namespace Forex_Rate_Monitoring.Controllers {
         }
 
         public IActionResult Index() {
-            ViewData["Currencies"] = DBReader.GetCurrenciesFromDB(_ctx);
-            ViewData["ExchangeRates"] = DBReader.GetExchangeRatesFromDB(_ctx);
-            return View();
+            IList<Currency> currencies = DBReader.GetCurrenciesFromDB(_ctx);
+            IList<ExchangeRateModel> exchangeRates = DBReader.GetExchangeRatesFromDB(_ctx);
+            return View(exchangeRates);
         }
 
         public IActionResult History(int from, int to) {
-            ViewData["Currencies"] = DBReader.GetCurrenciesFromDB(_ctx);
-            ViewData["ExchangeRates"] = DBReader.GetExchangeRatesFromDB(_ctx);
+            IList<Currency> currencies = DBReader.GetCurrenciesFromDB(_ctx);
+            IList<ExchangeRateModel> exchangeRates = DBReader.GetExchangeRatesFromDB(_ctx);
             IEnumerable<History> ratesHistory = DBReader.GetHistoriesFromDB(_ctx).Where(a => a.FromCurrencyCode.CurrencyId == from && a.ToCurrencyCode.CurrencyId == to);
-            ViewData["Histories"] = ratesHistory;
-            return View();
+            return View(ratesHistory);
         }
 
         public IActionResult Privacy() {

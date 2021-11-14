@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,71 +46,33 @@ namespace WorkerService
                 using(IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<FER_Context>();
-                    getData(context);
+                    await getData(context);
                 }
                 await Task.Delay(1800000, stoppingToken);
             }
         }
 
-        private static void getData(FER_Context ctx)
+        protected static async System.Threading.Tasks.Task getData(FER_Context ctx)
         {
-            //string key = ConfigurationManager.AppSettings.Get("API-KEY");
-            string key = "GD8LDEQ979MX190X";
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client
+                .GetAsync("https://marketdata.tradermade.com/api/v1/live?currency=TRYUSD,TRYEUR,TRYGBP,TRYJPY,TRYCHF,TRYKWD,TRYRUB," +
+                "USDTRY,USDEUR,USDGBP,USDJPY,USDCHF,USDKWD,USDRUB,EURTRY,EURUSD,EURGBP,EURJPY,EURCHF,EURKWD,EURRUB," +
+                "GBPTRY,GBPUSD,GBPEUR,GBPJPY,GBPCHF,GBPKWD,GBPRUB,JPYTRY,JPYUSD,JPYEUR,JPYGBP,JPYCHF,JPYKWD,JPYRUB," +
+                "CHFTRY,CHFUSD,CHFEUR,CHFGBP,CHFJPY,CHFKWD,CHFRUB,KWDTRY,KWDUSD,KWDEUR,KWDGBP,KWDJPY,KWDCHF,JPYRUB," +
+                "RUBTRY,RUBUSD,RUBEUR,RUBGBP,RUBJPY,RUBCHF,RUBKWD&api_key=Y486dfU4yLB1H7Vvprqm");
 
-            foreach (string from in Enum.GetNames(typeof(Currencies))) {
+            response.EnsureSuccessStatusCode();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            JObject result = JObject.Parse(responseBody);     
+            IList<JToken> results = result["quotes"].Children().ToList();
 
-                foreach (string to in Enum.GetNames(typeof(Currencies))) {
-                    if (from.Equals(to))
-                        continue;
-
-                    string QUERY_URL = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=" + from + "&to_currency=" + to + "&apikey=" + key;
-                    Uri queryUri = new Uri(QUERY_URL);
-
-                    var json_data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(new WebClient().DownloadString(queryUri));
-
-                    foreach (JObject element in json_data.Values) {
-
-                        var fromCurrency = element.GetValue("1. From_Currency Code").ToString();
-                        var toCurrency = element.GetValue("3. To_Currency Code").ToString();
-
-                        ExchangeRateModel entity = ctx.ExchangeRates.Where(item => item.FromCurrency.CurrencyName == fromCurrency).FirstOrDefault(item => item.ToCurrency.CurrencyName == toCurrency);
-                        
-                        if (entity != null) {
-
-                            History history = new History() {
-                                FromCurrencyCode = ctx.Currency.FirstOrDefault(i => i.CurrencyName == fromCurrency),
-                                ToCurrencyCode = ctx.Currency.FirstOrDefault(i => i.CurrencyName == toCurrency),
-                                ExchangeRate = entity.ExchangeRate,
-                                Date = entity.Date,
-                                ExchangeRateModel = entity
-                            };
-
-                            ctx.History.Add(history);  
-
-                            entity.ExchangeRate = element.GetValue("5. Exchange Rate").ToString();
-                            entity.Date = ((DateTime)element.GetValue("6. Last Refreshed"));
-
-                            ctx.ExchangeRates.Update(entity);
-                            ctx.SaveChanges();
-                        }
-                        else {
-                            ExchangeRateModel rate = new ExchangeRateModel();
-
-                            rate.FromCurrency = ctx.Currency.FirstOrDefault(i => i.CurrencyName == fromCurrency); 
-                            rate.ToCurrency = ctx.Currency.FirstOrDefault(i => i.CurrencyName == toCurrency);
-                            rate.ExchangeRate = element.GetValue("5. Exchange Rate").ToString();
-                            rate.Date = ((DateTime)element.GetValue("6. Last Refreshed"));
-
-                            ctx.ExchangeRates.Add(rate);
-                            ctx.SaveChanges();
-                        }
-                    }
-                }
+            foreach (JToken token in results) {
+                ExchangeRateModel exchangeRate = token.ToObject<ExchangeRateModel>();
+                ctx.ExchangeRates.Add(exchangeRate);
             }
+            ctx.SaveChanges();         
         }
-
-
-
     }
 }
 

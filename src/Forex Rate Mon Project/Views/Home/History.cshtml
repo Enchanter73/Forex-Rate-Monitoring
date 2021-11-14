@@ -1,16 +1,14 @@
 ﻿@{
     ViewData["Title"] = "History Data";
-    var currencies = ViewData["Currencies"] as List<Currency>;
-    var exchangeRates = ViewData["ExchangeRates"] as List<ExchangeRateModel>;
-    var histories = ViewData["Histories"] as IEnumerable<History>;
 }
+@model IEnumerable<History>;
 <table class="table table-bordered table-responsive table-hover">
     <tr>
         <td>CurrencyCode</td>
         <td>ExchangeRate</td>
         <td>Date</td>
     </tr>
-    @foreach (var e in histories) {
+    @foreach (var e in Model) {
         <tr>
             <td>@e.FromCurrencyCode.CurrencyName/@e.ToCurrencyCode.CurrencyName</td>
             <td>@e.ExchangeRate</td>
