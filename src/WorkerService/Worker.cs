@@ -1,9 +1,11 @@
 using ApplicationCore;
 using ApplicationCore.Models;
 using Infastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -41,7 +43,7 @@ namespace WorkerService
 
             while (!stoppingToken.IsCancellationRequested)
             {        
-                _logger.LogInformation("Worker running at: {time}", DateTime.Now);            
+                _logger.LogInformation("Worker running at: {time}", DateTime.Now);
 
                 using(IServiceScope scope = _serviceProvider.CreateScope())
                 {
@@ -52,26 +54,26 @@ namespace WorkerService
             }
         }
 
-        protected static async System.Threading.Tasks.Task getData(FER_Context ctx)
+        protected static async Task getData(FER_Context ctx)
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client
-                .GetAsync("https://marketdata.tradermade.com/api/v1/live?currency=TRYUSD,TRYEUR,TRYGBP,TRYJPY,TRYCHF,TRYKWD,TRYRUB," +
-                "USDTRY,USDEUR,USDGBP,USDJPY,USDCHF,USDKWD,USDRUB,EURTRY,EURUSD,EURGBP,EURJPY,EURCHF,EURKWD,EURRUB," +
-                "GBPTRY,GBPUSD,GBPEUR,GBPJPY,GBPCHF,GBPKWD,GBPRUB,JPYTRY,JPYUSD,JPYEUR,JPYGBP,JPYCHF,JPYKWD,JPYRUB," +
-                "CHFTRY,CHFUSD,CHFEUR,CHFGBP,CHFJPY,CHFKWD,CHFRUB,KWDTRY,KWDUSD,KWDEUR,KWDGBP,KWDJPY,KWDCHF,JPYRUB," +
-                "RUBTRY,RUBUSD,RUBEUR,RUBGBP,RUBJPY,RUBCHF,RUBKWD&api_key=Y486dfU4yLB1H7Vvprqm");
+                .GetAsync("https://marketdata.tradermade.com/api/v1/live?currency=TRYUSD,TRYEUR,TRYGBP,TRYJPY,TRYCHF,TRYKWD,TRYRUB,USDTRY,USDEUR,USDGBP,USDJPY,USDCHF,USDKWD,USDRUB,EURTRY,EURUSD,EURGBP,EURJPY,EURCHF,EURKWD,EURRUB,GBPTRY,GBPUSD,GBPEUR,GBPJPY,GBPCHF,GBPKWD,GBPRUB,JPYTRY,JPYUSD,JPYEUR,JPYGBP,JPYCHF,JPYKWD,JPYRUB,CHFTRY,CHFUSD,CHFEUR,CHFGBP,CHFJPY,CHFKWD,CHFRUB,KWDTRY,KWDUSD,KWDEUR,KWDGBP,KWDJPY,KWDCHF,JPYRUB,RUBTRY,RUBUSD,RUBEUR,RUBGBP,RUBJPY,RUBCHF,RUBKWD&api_key=Y486dfU4yLB1H7Vvprqm");
 
-            response.EnsureSuccessStatusCode();
             var responseBody = await response.Content.ReadAsStringAsync();
             JObject result = JObject.Parse(responseBody);     
             IList<JToken> results = result["quotes"].Children().ToList();
 
-            foreach (JToken token in results) {
-                ExchangeRateModel exchangeRate = token.ToObject<ExchangeRateModel>();
-                ctx.ExchangeRates.Add(exchangeRate);
+            foreach (var token in results) {
+                token.Children().Last().AddAfterSelf(new JProperty("Date", result["requested_time"]));
+
+                ExchangeRateModel exchangeRateModel = JsonConvert.DeserializeObject<ExchangeRateModel>(token.ToString());
+                exchangeRateModel.FromCurrency = ctx.Currency.FirstOrDefault(x => x.CurrencyName == exchangeRateModel.BaseCurreny);
+                exchangeRateModel.ToCurrency = ctx.Currency.FirstOrDefault(x => x.CurrencyName == exchangeRateModel.QuoteCurrency);
+                            
+                ctx.ExchangeRates.Add(exchangeRateModel);                          
             }
-            ctx.SaveChanges();         
+            ctx.SaveChanges();
         }
     }
 }

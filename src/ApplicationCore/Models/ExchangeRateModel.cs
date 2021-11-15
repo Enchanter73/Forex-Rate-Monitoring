@@ -14,14 +14,22 @@ namespace ApplicationCore.Models
         
         public Currency FromCurrency { get; set; }
 
+        [NotMapped]
+        [JsonProperty("base_currency")]
+        public string BaseCurreny { get; set; }
+
+        [NotMapped]
+        [JsonProperty("quote_currency")]
+        public string QuoteCurrency { get; set; }
+
         public Currency ToCurrency { get; set; }
 
+        [JsonProperty("mid")]
         [Column("ExchangeRate")]
         public string ExchangeRate { get; set; }
 
+        [JsonProperty("Date")]
         [Column("Date")]
         public DateTime Date { get; set; }
-
-        public List<History> Histories { get; set; }
     }
 }

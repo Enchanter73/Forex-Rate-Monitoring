@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "History Data";
 }
-@model IEnumerable<History>;
+@model IEnumerable<ExchangeRateModel>;
 <table class="table table-bordered table-responsive table-hover">
     <tr>
         <td>CurrencyCode</td>
@@ -10,7 +10,7 @@
     </tr>
     @foreach (var e in Model) {
         <tr>
-            <td>@e.FromCurrencyCode.CurrencyName/@e.ToCurrencyCode.CurrencyName</td>
+            <td>@e.FromCurrency.CurrencyName/@e.ToCurrency.CurrencyName</td>
             <td>@e.ExchangeRate</td>
             <td>@e.Date</td>
         </tr>

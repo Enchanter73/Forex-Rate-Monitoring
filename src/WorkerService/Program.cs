@@ -44,20 +44,12 @@ namespace WorkerService
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                    config.AddJsonFile("appsettings.json", optional: true);
-                    config.AddEnvironmentVariables();
-
-                    if (args != null) {
-                        config.AddCommandLine(args);
-                    }
-                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
                     services.AddDbContext<FER_Context>(options =>
-                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("ForexDB")));
+                    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ForexDB;Trusted_Connection=True;MultipleActiveResultSets=true"));
+                        //options.UseSqlServer(hostContext.Configuration.GetConnectionString("ForexDB")));
                     
                 });
     }

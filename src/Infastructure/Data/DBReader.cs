@@ -18,10 +18,5 @@ namespace Infastructure.Data {
             List<ExchangeRateModel> exchangeRates = ctx.ExchangeRates.ToList();
             return exchangeRates;
         }
-
-        public static IList<History> GetHistoriesFromDB(FER_Context ctx) {
-            List<History> histories = ctx.History.ToList();
-            return histories;
-        }
     }
 }

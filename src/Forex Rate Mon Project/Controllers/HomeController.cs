@@ -27,13 +27,20 @@ namespace Forex_Rate_Monitoring.Controllers {
         public IActionResult Index() {
             IList<Currency> currencies = DBReader.GetCurrenciesFromDB(_ctx);
             IList<ExchangeRateModel> exchangeRates = DBReader.GetExchangeRatesFromDB(_ctx);
-            return View(exchangeRates);
+            var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });
+
+            IList<ExchangeRateModel> result = new List<ExchangeRateModel>();
+            foreach(var x in currentRates)
+            {
+                result.Add(exchangeRates.Last(e => e.FromCurrency == x.Key.FromCurrency && e.ToCurrency == x.Key.ToCurrency));
+            }
+            return View(result);
         }
 
         public IActionResult History(int from, int to) {
             IList<Currency> currencies = DBReader.GetCurrenciesFromDB(_ctx);
             IList<ExchangeRateModel> exchangeRates = DBReader.GetExchangeRatesFromDB(_ctx);
-            IEnumerable<History> ratesHistory = DBReader.GetHistoriesFromDB(_ctx).Where(a => a.FromCurrencyCode.CurrencyId == from && a.ToCurrencyCode.CurrencyId == to);
+            IEnumerable<ExchangeRateModel> ratesHistory = DBReader.GetExchangeRatesFromDB(_ctx).Where(a => a.FromCurrency.CurrencyId == from && a.ToCurrency.CurrencyId == to);
             return View(ratesHistory);
         }
 

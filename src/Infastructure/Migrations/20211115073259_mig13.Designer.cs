@@ -4,14 +4,16 @@ using Infastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infastructure.Migrations
 {
     [DbContext(typeof(FER_Context))]
-    partial class FER_ContextModelSnapshot : ModelSnapshot
+    [Migration("20211115073259_mig13")]
+    partial class mig13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,6 +67,39 @@ namespace Infastructure.Migrations
                     b.ToTable("ExchangeRates");
                 });
 
+            modelBuilder.Entity("ApplicationCore.Models.History", b =>
+                {
+                    b.Property<int>("HistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExchangeRate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ExchangeRateModelExchangeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FromCurrencyCodeCurrencyId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToCurrencyCodeCurrencyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HistoryId");
+
+                    b.HasIndex("ExchangeRateModelExchangeId");
+
+                    b.HasIndex("FromCurrencyCodeCurrencyId");
+
+                    b.HasIndex("ToCurrencyCodeCurrencyId");
+
+                    b.ToTable("History");
+                });
+
             modelBuilder.Entity("ApplicationCore.Models.ExchangeRateModel", b =>
                 {
                     b.HasOne("ApplicationCore.Models.Currency", "FromCurrency")
@@ -80,11 +115,37 @@ namespace Infastructure.Migrations
                     b.Navigation("ToCurrency");
                 });
 
+            modelBuilder.Entity("ApplicationCore.Models.History", b =>
+                {
+                    b.HasOne("ApplicationCore.Models.ExchangeRateModel", "ExchangeRateModel")
+                        .WithMany("Histories")
+                        .HasForeignKey("ExchangeRateModelExchangeId");
+
+                    b.HasOne("ApplicationCore.Models.Currency", "FromCurrencyCode")
+                        .WithMany()
+                        .HasForeignKey("FromCurrencyCodeCurrencyId");
+
+                    b.HasOne("ApplicationCore.Models.Currency", "ToCurrencyCode")
+                        .WithMany()
+                        .HasForeignKey("ToCurrencyCodeCurrencyId");
+
+                    b.Navigation("ExchangeRateModel");
+
+                    b.Navigation("FromCurrencyCode");
+
+                    b.Navigation("ToCurrencyCode");
+                });
+
             modelBuilder.Entity("ApplicationCore.Models.Currency", b =>
                 {
                     b.Navigation("FromExchangeRateModels");
 
                     b.Navigation("ToExchangeRateModels");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Models.ExchangeRateModel", b =>
+                {
+                    b.Navigation("Histories");
                 });
 #pragma warning restore 612, 618
         }
