@@ -24,22 +24,26 @@ namespace WorkerService
     {
         private readonly ILogger<Worker> _logger;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IConfiguration _configuration;
 
-        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider)
+        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
+            _configuration = configuration;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            /*var now = DateTime.Now;
+            string url = _configuration.GetConnectionString("CurrentData");
+
+            var now = DateTime.Now;
             DateTime startDate = new DateTime(now.Year, now.Month, now.Day, 9, 0, 0);
             TimeSpan t = startDate.Subtract(now);
 
-            t = t.Hours < -9 ? startDate.AddDays(1).Subtract(now) : t.Hours < 0 ? startDate.AddDays(2).Subtract(now) : t;
+            t = t.Hours < -9 ? startDate.AddDays(1).Subtract(now) : t.Hours < 0 ? (t.Minutes < -30 ? TimeSpan.FromMinutes(60 + t.Minutes) : TimeSpan.FromMinutes(30+t.Minutes)) : startDate.AddDays(2).Subtract(now);
 
-            await Task.Delay((t.Hours*3600 + t.Minutes*60 + t.Seconds)*1000, stoppingToken);*/
+            await Task.Delay((t.Hours*3600 + t.Minutes*60 + t.Seconds)*1000, stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {        
@@ -48,17 +52,20 @@ namespace WorkerService
                 using(IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<FER_Context>();
-                    await getData(context);
+                    await getData(context, url);
                 }
-                await Task.Delay(1800000, stoppingToken);
+                if (now.Hour >= 18)
+                    await Task.Delay(54000000, stoppingToken);
+                else
+                    await Task.Delay(1800000, stoppingToken);
             }
         }
 
-        protected static async Task getData(FER_Context ctx)
+        protected static async Task getData(FER_Context ctx, string url)
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client
-                .GetAsync("https://marketdata.tradermade.com/api/v1/live?currency=TRYUSD,TRYEUR,TRYGBP,TRYJPY,TRYCHF,TRYKWD,TRYRUB,USDTRY,USDEUR,USDGBP,USDJPY,USDCHF,USDKWD,USDRUB,EURTRY,EURUSD,EURGBP,EURJPY,EURCHF,EURKWD,EURRUB,GBPTRY,GBPUSD,GBPEUR,GBPJPY,GBPCHF,GBPKWD,GBPRUB,JPYTRY,JPYUSD,JPYEUR,JPYGBP,JPYCHF,JPYKWD,JPYRUB,CHFTRY,CHFUSD,CHFEUR,CHFGBP,CHFJPY,CHFKWD,CHFRUB,KWDTRY,KWDUSD,KWDEUR,KWDGBP,KWDJPY,KWDCHF,JPYRUB,RUBTRY,RUBUSD,RUBEUR,RUBGBP,RUBJPY,RUBCHF,RUBKWD&api_key=Y486dfU4yLB1H7Vvprqm");
+                .GetAsync(url);
 
             var responseBody = await response.Content.ReadAsStringAsync();
             JObject result = JObject.Parse(responseBody);     

@@ -43,14 +43,12 @@ namespace WorkerService
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args)               
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
                     services.AddDbContext<FER_Context>(options =>
-                    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ForexDB;Trusted_Connection=True;MultipleActiveResultSets=true"));
-                        //options.UseSqlServer(hostContext.Configuration.GetConnectionString("ForexDB")));
-                    
+                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("ForexDB")));                  
                 });
     }
 }

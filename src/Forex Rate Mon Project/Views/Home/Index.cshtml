@@ -3,6 +3,10 @@
 }
 @model IList<ExchangeRateModel>;
 
+@*@{ 
+    IEnumerable<ExchangeRateModel> sortedList = Model.OrderByDescending(x => x.FromCurrency.CurrencyName);
+}*@
+
     <table class="table table-bordered table-responsive table-hover">
         <tr>
             <td>CurrencyCode</td>

@@ -27,7 +27,8 @@ namespace Forex_Rate_Monitoring.Controllers {
         public IActionResult Index() {
             IList<Currency> currencies = DBReader.GetCurrenciesFromDB(_ctx);
             IList<ExchangeRateModel> exchangeRates = DBReader.GetExchangeRatesFromDB(_ctx);
-            var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });
+
+            var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });      
 
             IList<ExchangeRateModel> result = new List<ExchangeRateModel>();
             foreach(var x in currentRates)
