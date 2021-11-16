@@ -43,9 +43,8 @@ namespace Forex_Rate_Monitoring.Controllers {
         }
 
         public IActionResult Search(string input, string basecurrencyselect, string quotecurrenyselect)
-        {
-            _repository.GetSortedExchangeRatesFromDB();
-            return View("Index");
+        {          
+            return View("Index", _repository.GetSearchedResult(input, basecurrencyselect, quotecurrenyselect));
         }
 
         public IActionResult Privacy() {
