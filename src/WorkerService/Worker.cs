@@ -1,6 +1,7 @@
 using ApplicationCore;
-using ApplicationCore.Models;
+using ApplicationCore.Entities;
 using Infastructure;
+using Infastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -51,8 +52,8 @@ namespace WorkerService
 
                 using(IServiceScope scope = _serviceProvider.CreateScope())
                 {
-                    var context = scope.ServiceProvider.GetRequiredService<FER_Context>();
-                    await getData(context, url);
+                    var repo = scope.ServiceProvider.GetRequiredService<Repository>();
+                    await getData(url, repo);
                 }
                 if (now.Hour >= 18)
                     await Task.Delay(54000000, stoppingToken);
@@ -61,26 +62,16 @@ namespace WorkerService
             }
         }
 
-        protected static async Task getData(FER_Context ctx, string url)
+        public static async Task getData(string url, Repository repo)
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client
                 .GetAsync(url);
 
             var responseBody = await response.Content.ReadAsStringAsync();
-            JObject result = JObject.Parse(responseBody);     
-            IList<JToken> results = result["quotes"].Children().ToList();
+            JObject result = JObject.Parse(responseBody);
 
-            foreach (var token in results) {
-                token.Children().Last().AddAfterSelf(new JProperty("Date", result["requested_time"]));
-
-                ExchangeRateModel exchangeRateModel = JsonConvert.DeserializeObject<ExchangeRateModel>(token.ToString());
-                exchangeRateModel.FromCurrency = ctx.Currency.FirstOrDefault(x => x.CurrencyName == exchangeRateModel.BaseCurreny);
-                exchangeRateModel.ToCurrency = ctx.Currency.FirstOrDefault(x => x.CurrencyName == exchangeRateModel.QuoteCurrency);
-                            
-                ctx.ExchangeRates.Add(exchangeRateModel);                          
-            }
-            ctx.SaveChanges();
+            repo.Add(result);
         }
     }
 }

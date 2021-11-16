@@ -1,4 +1,3 @@
-using Infastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Infastructure.Repositories;
+using Infastructure;
 
 namespace Forex_Rate_Monitoring {
     public class Startup {
@@ -23,6 +24,7 @@ namespace Forex_Rate_Monitoring {
         public void ConfigureServices(IServiceCollection services) {
             services.AddControllersWithViews();
             services.AddDbContext<FER_Context>(options => options.UseSqlServer(Configuration.GetConnectionString("ForexDB")));
+            services.AddScoped<Repository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

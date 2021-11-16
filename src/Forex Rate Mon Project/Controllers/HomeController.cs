@@ -10,39 +10,42 @@ using System.Text.Json;
 using System.Net;
 using System.Configuration;
 using WorkerService;
-using ApplicationCore.Models;
+using ApplicationCore.Entities;
 using Infastructure;
 using Infastructure.Data;
+using Infastructure.Repositories;
+using ApplicationCore.ViewModels;
+using Domain.ViewModels;
 
 namespace Forex_Rate_Monitoring.Controllers {
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
         private readonly FER_Context _ctx;
+        private Repository _repository;
 
-        public HomeController(ILogger<HomeController> logger, FER_Context ctx) {
+        public HomeController(ILogger<HomeController> logger, FER_Context ctx, Repository repository) {
             _logger = logger;
             _ctx = ctx;
+            _repository = repository;
         }
 
         public IActionResult Index() {
-            IList<Currency> currencies = DBReader.GetCurrenciesFromDB(_ctx);
-            IList<ExchangeRateModel> exchangeRates = DBReader.GetExchangeRatesFromDB(_ctx);
-
-            var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });      
-
-            IList<ExchangeRateModel> result = new List<ExchangeRateModel>();
-            foreach(var x in currentRates)
-            {
-                result.Add(exchangeRates.Last(e => e.FromCurrency == x.Key.FromCurrency && e.ToCurrency == x.Key.ToCurrency));
-            }
-            return View(result);
+            return View(_repository.GetCurrentExchangeRatesFromDB());
         }
 
         public IActionResult History(int from, int to) {
-            IList<Currency> currencies = DBReader.GetCurrenciesFromDB(_ctx);
-            IList<ExchangeRateModel> exchangeRates = DBReader.GetExchangeRatesFromDB(_ctx);
-            IEnumerable<ExchangeRateModel> ratesHistory = DBReader.GetExchangeRatesFromDB(_ctx).Where(a => a.FromCurrency.CurrencyId == from && a.ToCurrency.CurrencyId == to);
-            return View(ratesHistory);
+            return View(_repository.GetExchangeRatesFromDB(from, to));
+        }
+
+        public IActionResult Sort(int key)
+        {      
+            return View("Index", _repository.GetSortedExchangeRatesFromDB(key));
+        }
+
+        public IActionResult Search(string input, string basecurrencyselect, string quotecurrenyselect)
+        {
+            _repository.GetSortedExchangeRatesFromDB();
+            return View("Index");
         }
 
         public IActionResult Privacy() {

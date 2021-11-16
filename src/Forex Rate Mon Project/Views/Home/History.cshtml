@@ -1,14 +1,14 @@
 ﻿@{
     ViewData["Title"] = "History Data";
 }
-@model IEnumerable<ExchangeRateModel>;
-<table class="table table-bordered table-responsive table-hover">
+@model ExchangeRateViewModel;
+<table class="table table-bordered table-hover">
     <tr>
         <td>CurrencyCode</td>
         <td>ExchangeRate</td>
         <td>Date</td>
     </tr>
-    @foreach (var e in Model) {
+    @foreach (var e in Model.ExchangeRateModels) {
         <tr>
             <td>@e.FromCurrency.CurrencyName/@e.ToCurrency.CurrencyName</td>
             <td>@e.ExchangeRate</td>

@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using Infastructure.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-using ApplicationCore.Models;
+using ApplicationCore.Entities;
+using Infastructure.Repositories;
 
 namespace WorkerService
 {
@@ -48,7 +49,8 @@ namespace WorkerService
                 {
                     services.AddHostedService<Worker>();
                     services.AddDbContext<FER_Context>(options =>
-                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("ForexDB")));                  
+                        options.UseSqlServer(hostContext.Configuration.GetConnectionString("ForexDB")));
+                    services.AddScoped<Repository>();
                 });
     }
 }

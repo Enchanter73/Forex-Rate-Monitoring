@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace ApplicationCore.Models
+namespace ApplicationCore.Entities
 {
     public class Currency
     {

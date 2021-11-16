@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Entities;
 using ApplicationCore;
 using System;
 using System.Collections.Generic;

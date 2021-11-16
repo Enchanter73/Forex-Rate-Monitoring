@@ -1,25 +1,107 @@
 ﻿@{
     ViewData["Title"] = "Current Exchange Rates";
 }
-@model IList<ExchangeRateModel>;
+@model ExchangeRateViewModel;
 
-@*@{ 
-    IEnumerable<ExchangeRateModel> sortedList = Model.OrderByDescending(x => x.FromCurrency.CurrencyName);
-}*@
+<script>
+    function getSearchData() {
+        var input = $('#MinExchangeRate').val();
+        var basecurrencyselect = $('#BaseCurrencySelect option:selected').text();
+        var quotecurrenyselect = $('#QuoteCurrencySelect option:selected').text();
 
-    <table class="table table-bordered table-responsive table-hover">
+        var fd = new FormData();
+
+        fd.append("input", input);
+        fd.append("basecurrencyselect", basecurrencyselect);
+        fd.append("quotecurrenyselect", quotecurrenyselect);
+        $.ajax({
+            url: '/Home/Search',
+            contentType: false,
+            enctype: 'multipart/form-data',
+            processData: false,
+            type: "POST",
+            data: fd,
+            success: function (data) {
+                if (data) {
+                    alert("success")
+                }
+                else {
+                    alert("error");
+                }
+            },
+            error: function (data) {
+                alert("error");
+            }
+        });
+    }
+</script>
+
+<div class="btn-group-toggle">
+    <a href="@Url.Action("Sort","Home", new {key = 1})"
+       class="btn btn-outline-dark btn-secondary btn-light">Base Currency Desc.</a>
+
+    <a href="@Url.Action("Sort","Home", new {key = 2})"
+       class="btn btn-outline-dark btn-secondary btn-light">Base Currency Asc.</a>
+
+    <a href="@Url.Action("Sort","Home", new {key = 3})"
+       class="btn btn-outline-dark btn-secondary btn-light">Quote Currency Desc.</a>
+
+    <a href="@Url.Action("Sort","Home", new {key = 4})"
+       class="btn btn-outline-dark btn-secondary btn-light">Quote Currency Asc.</a>
+
+    <a href="@Url.Action("Sort","Home", new {key = 5})"
+       class="btn btn-outline-dark btn-secondary btn-light">Exchange Rate Desc.</a>
+
+    <a href="@Url.Action("Sort","Home", new {key = 6})"
+       class="btn btn-outline-dark btn-secondary btn-light">Exchange Rate Asc.</a>
+</div>
+
+@using (Html.BeginForm("Search", "Home", FormMethod.Post))
+{
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <button type="button" onclick="getSearchData()" class="btn btn-outline-dark btn-secondary btn-light">Search</button>
+        </div>
+        <input type="text" class="form-control" name="minExchangeRate" id="MinExchangeRate" value="0" aria-label="Exchange Rate">
+
+        <select class="custom-select" id="BaseCurrencySelect">
+            <option selected>Base Currency:</option>
+            <option value="1">TRY</option>
+            <option value="2">USD</option>
+            <option value="3">EUR</option>
+            <option value="4">GBP</option>
+            <option value="5">JPY</option>
+            <option value="6">CHF</option>
+            <option value="7">KWD</option>
+            <option value="8">RUB</option>
+        </select>
+        <select class="custom-select" id="QuoteCurrencySelect">
+            <option selected>Quote Currency:</option>
+            <option value="1">TRY</option>
+            <option value="2">USD</option>
+            <option value="3">EUR</option>
+            <option value="4">GBP</option>
+            <option value="5">JPY</option>
+            <option value="6">CHF</option>
+            <option value="7">KWD</option>
+            <option value="8">RUB</option>
+        </select>
+    </div>
+}
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <td>CurrencyCode</td>
+        <td>ExchangeRate</td>
+        <td>Date</td>
+    </tr>
+    @foreach (var e in @Model.ExchangeRateModels)
+    {
         <tr>
-            <td>CurrencyCode</td>
-            <td>ExchangeRate</td>
-            <td>Date</td>
+            <td>@Html.ActionLink(@e.FromCurrency.CurrencyName + "/" + @e.ToCurrency.CurrencyName, "History", "Home", new { from = e.FromCurrency.CurrencyId, to = e.ToCurrency.CurrencyId }, null)</td>
+            <td>@e.ExchangeRate</td>
+            <td>@e.Date</td>
         </tr>
-        @foreach (var e in @Model)
-        {
-            <tr>
-                <td>@Html.ActionLink(@e.FromCurrency.CurrencyName +"/"+ @e.ToCurrency.CurrencyName, "History", "Home", new { from = e.FromCurrency.CurrencyId, to = e.ToCurrency.CurrencyId }, null)</td>
-                <td>@e.ExchangeRate</td>
-                <td>@e.Date</td>
-            </tr>
-        }
-    </table>
+    }
+</table>
 

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forex Rate Monitoring", "Forex Rate Monitoring.csproj", "{9EFF4BD1-944E-492E-B4E2-6243F9512CB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore", "..\ApplicationCore\ApplicationCore.csproj", "{683852C6-44E5-49C6-93C8-8C715D082BE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "..\ApplicationCore\Domain.csproj", "{683852C6-44E5-49C6-93C8-8C715D082BE9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerService", "..\WorkerService\WorkerService.csproj", "{BAE952A6-3B49-4124-BB45-38021AA96F1C}"
 EndProject
