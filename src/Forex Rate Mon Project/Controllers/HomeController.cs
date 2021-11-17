@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Net;
 using System.Configuration;
-using WorkerService;
 using ApplicationCore.Entities;
 using Infastructure;
 using Infastructure.Data;
@@ -29,22 +28,32 @@ namespace Forex_Rate_Monitoring.Controllers {
             _repository = repository;
         }
 
+        [HttpGet]
         public IActionResult Index() {
             return View(_repository.GetCurrentExchangeRatesFromDB());
         }
 
+        [HttpGet]
         public IActionResult History(int from, int to) {
             return View(_repository.GetExchangeRatesFromDB(from, to));
         }
 
+        [HttpGet]
         public IActionResult Sort(int key)
         {      
             return View("Index", _repository.GetSortedExchangeRatesFromDB(key));
         }
 
-        public IActionResult Search(string input, string basecurrencyselect, string quotecurrenyselect)
-        {          
-            return View("Index", _repository.GetSearchedResult(input, basecurrencyselect, quotecurrenyselect));
+        [HttpPost]
+        public IActionResult Search(string exchangerate, string basecurrency, string quotecurreny)
+        {
+            return RedirectToAction("FilteredTable", "Home", new { exchangerate = exchangerate, basecurrency = basecurrency, quotecurreny = quotecurreny});
+        }
+
+        [HttpGet]
+        public IActionResult FilteredTable(string exchangerate, string basecurrency, string quotecurreny)
+        {
+            return View("Index", _repository.GetSearchedResult(exchangerate, basecurrency, quotecurreny));
         }
 
         public IActionResult Privacy() {

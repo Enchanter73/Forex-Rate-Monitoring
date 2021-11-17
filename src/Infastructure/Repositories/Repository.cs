@@ -89,14 +89,17 @@ namespace Infastructure.Repositories
         {
             ExchangeRateViewModel model = GetCurrentExchangeRatesFromDB();
             IEnumerable<ExchangeRateModel> result = new List<ExchangeRateModel>();
-            //IList<Currency> currencies = _ctx.Currency.ToList();
 
-            model.ExchangeRateModels = model.ExchangeRateModels.Where(x => double.Parse(x.ExchangeRate) > double.Parse(exchangeRate)).ToList();
+            result = model.ExchangeRateModels.Where(x => double.Parse(x.ExchangeRate) > double.Parse(exchangeRate)).ToList();
 
             if(baseCurrency != "Base Currency")
-                result = model.ExchangeRateModels.Where(x => x.FromCurrency.CurrencyName == baseCurrency);
+            {
+                result = result.Where(x => x.FromCurrency.CurrencyName == baseCurrency).ToList();
+            }               
             if(quoteCurrency != "Quote Currency")
-                result = model.ExchangeRateModels.Where(x => x.ToCurrency.CurrencyName == quoteCurrency);
+            {
+                result = result.Where(x => x.ToCurrency.CurrencyName == quoteCurrency).ToList();
+            }                
 
             return new ExchangeRateViewModel()
             {
