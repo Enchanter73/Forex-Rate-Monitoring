@@ -43,5 +43,11 @@ Exchange Rates Table with [ExchangeId][CurrencyId][CurrencyId][ExchangeRate][Dat
         
 ![image](https://user-images.githubusercontent.com/87266516/142195883-560a9c22-ecf5-4eff-848b-26b5050dcc09.png)
 
-### External Source:
-https://tradermade.com/market-data
+### How to Install:
+You can clone project to your local device.
+
+- This project uses Visual Studio's local SQL Server. If you have MSSQL Server you can get Database Connection String and use it instead. (Connection String variable is in the "appsetting.json" file inside both Infastructure and Forex Rate Monitoring projects.)
+
+- Inside the WorkerService/Worker.cs it gets the data from an external api using the url it gets from again "appsettings.json" file. You can add your own key by gettin the key from this link: https://tradermade.com/market-data
+
+- FYI: This project only uses data that exist in databse when printing it to screen. Therefore, you need to use worker to get data from api service before running the web application part.
