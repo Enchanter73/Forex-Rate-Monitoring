@@ -26,6 +26,12 @@ UI Layer(Forex Rate Monitoring):
 Worker Layer:
     This layer is the worker service of this application. Worker always runs and fetches data from external api service at certain intervals.
 
+Final Dependencies are:
+    Domain <---- Infastructure <----- UI
+       ^
+       |
+    Worker
+
 How this application works:
     In this application there are 8 different Currencies. [TRY, USD, EUR, GBP, JPY, CHF KWD, RUB]
     This application has a worker service that continuously running and gettin current exchange rates every 30 min, between 9 A.M - 6 P.M. every day.
