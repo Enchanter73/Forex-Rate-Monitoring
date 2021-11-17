@@ -28,9 +28,7 @@ Worker Layer:
 
 Final Dependencies are:
     Domain <---- Infastructure <----- UI
-       ^
-       |
-    Worker
+    Infastructure <---- Worker
 
 How this application works:
     In this application there are 8 different Currencies. [TRY, USD, EUR, GBP, JPY, CHF KWD, RUB]
