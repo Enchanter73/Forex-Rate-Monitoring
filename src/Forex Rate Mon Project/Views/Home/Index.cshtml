@@ -3,7 +3,7 @@
 }
 @model ExchangeRateViewModel;
 
-<script>
+@*<script>
     function getSearchData() {
         var input = $('#MinExchangeRate').val();
         var basecurrencyselect = $('#BaseCurrencySelect option:selected').text();
@@ -29,7 +29,7 @@
             }
         });
     }
-</script>
+</script>*@
 
 <div class="btn-group-toggle">
     <a href="@Url.Action("Sort","Home", new {key = 1})"
@@ -55,34 +55,61 @@
 {
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <button type="button" onclick="getSearchData()" class="btn btn-outline-dark btn-secondary btn-light">Search</button>
-        </div>
-        <input type="text" class="form-control" name="minExchangeRate" id="MinExchangeRate" value="0" aria-label="Exchange Rate">
 
-        <select class="custom-select" id="BaseCurrencySelect">
-            <option selected>Base Currency</option>
-            <option value="1">TRY</option>
-            <option value="2">USD</option>
-            <option value="3">EUR</option>
-            <option value="4">GBP</option>
-            <option value="5">JPY</option>
-            <option value="6">CHF</option>
-            <option value="7">KWD</option>
-            <option value="8">RUB</option>
-        </select>
-        <select class="custom-select" id="QuoteCurrencySelect">
-            <option selected>Quote Currency</option>
-            <option value="1">TRY</option>
-            <option value="2">USD</option>
-            <option value="3">EUR</option>
-            <option value="4">GBP</option>
-            <option value="5">JPY</option>
-            <option value="6">CHF</option>
-            <option value="7">KWD</option>
-            <option value="8">RUB</option>
-        </select>
+            <input type="text" class="form-control" name="exchangerate" id="exchangerate" value="0" aria-label="Exchange Rate">
+
+            <select class="custom-select" name="basecurrency" id="basecurrency">
+                <option selected>Base Currency</option>
+                <option value="1">TRY</option>
+                <option value="2">USD</option>
+                <option value="3">EUR</option>
+                <option value="4">GBP</option>
+                <option value="5">JPY</option>
+                <option value="6">CHF</option>
+                <option value="7">KWD</option>
+                <option value="8">RUB</option>
+            </select>
+
+            <select class="custom-select" name="quotecurrency" id="quotecurrency">
+                <option selected>Quote Currency</option>
+                <option value="1">TRY</option>
+                <option value="2">USD</option>
+                <option value="3">EUR</option>
+                <option value="4">GBP</option>
+                <option value="5">JPY</option>
+                <option value="6">CHF</option>
+                <option value="7">KWD</option>
+                <option value="8">RUB</option>
+            </select>
+
+            <button type="submit" class="btn btn-outline-dark btn-secondary btn-light">Search</button>
+        </div>
     </div>
 }
+
+@*<select class="custom-select" name="basecurrency" id="BaseCurrencySelect">
+    <option selected>Base Currency</option>
+    <option value="1">TRY</option>
+    <option value="2">USD</option>
+    <option value="3">EUR</option>
+    <option value="4">GBP</option>
+    <option value="5">JPY</option>
+    <option value="6">CHF</option>
+    <option value="7">KWD</option>
+    <option value="8">RUB</option>
+</select>
+
+<select class="custom-select" name="quotecurrency" id="QuoteCurrencySelect">
+    <option selected>Quote Currency</option>
+    <option value="1">TRY</option>
+    <option value="2">USD</option>
+    <option value="3">EUR</option>
+    <option value="4">GBP</option>
+    <option value="5">JPY</option>
+    <option value="6">CHF</option>
+    <option value="7">KWD</option>
+    <option value="8">RUB</option>
+</select>*@
 
 <table class="table table-bordered table-hover">
     <tr>

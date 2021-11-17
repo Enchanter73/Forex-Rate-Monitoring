@@ -45,15 +45,15 @@ namespace Forex_Rate_Monitoring.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Search(string exchangerate, string basecurrency, string quotecurreny)
+        public IActionResult Search(string exchangerate, string basecurrency, string quotecurrency)
         {
-            return RedirectToAction("FilteredTable", "Home", new { exchangerate = exchangerate, basecurrency = basecurrency, quotecurreny = quotecurreny});
+            return RedirectToAction("FilteredTable", "Home", new { exchangerate = exchangerate, basecurrency = basecurrency, quotecurrency = quotecurrency});
         }
 
         [HttpGet]
-        public IActionResult FilteredTable(string exchangerate, string basecurrency, string quotecurreny)
+        public IActionResult FilteredTable(string exchangerate, string basecurrency, string quotecurrency)
         {
-            return View("Index", _repository.GetSearchedResult(exchangerate, basecurrency, quotecurreny));
+            return View("Index", _repository.GetSearchedResult(exchangerate, basecurrency, quotecurrency));
         }
 
         public IActionResult Privacy() {
