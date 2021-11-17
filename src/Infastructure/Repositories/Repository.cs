@@ -15,6 +15,7 @@ namespace Infastructure.Repositories
     public class Repository
     {
         protected readonly FER_Context _ctx;
+
         public Repository(FER_Context ctx)
         {
             _ctx = ctx;
@@ -47,6 +48,7 @@ namespace Infastructure.Repositories
             {
                 result.Add(exchangeRates.Last(e => e.FromCurrency == x.Key.FromCurrency && e.ToCurrency == x.Key.ToCurrency));
             }
+
             return new ExchangeRateViewModel()
             {
                 ExchangeRateModels = result

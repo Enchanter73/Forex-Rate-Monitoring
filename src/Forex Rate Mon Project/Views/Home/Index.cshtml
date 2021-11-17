@@ -3,34 +3,6 @@
 }
 @model ExchangeRateViewModel;
 
-@*<script>
-    function getSearchData() {
-        var input = $('#MinExchangeRate').val();
-        var basecurrencyselect = $('#BaseCurrencySelect option:selected').text();
-        var quotecurrenyselect = $('#QuoteCurrencySelect option:selected').text();
-
-        var fd = new FormData();
-
-        fd.append("exchangerate", input);
-        fd.append("basecurrency", basecurrencyselect);
-        fd.append("quotecurreny", quotecurrenyselect);
-        $.ajax({
-            url: '/Home/Search',
-            contentType: false,
-            enctype: 'multipart/form-data',
-            processData: false,
-            type: "POST",
-            data: fd,
-            success: function (data) {
-                //window.location.href = "Home/FilteredTable?exchangerate=" + input + "&basecurrency=" + basecurrencyselect + "&quotecurrency=" + quotecurrenyselect;
-            },
-            error: function (data) {
-                /*alert("error");*/
-            }
-        });
-    }
-</script>*@
-
 <div class="btn-group-toggle">
     <a href="@Url.Action("Sort","Home", new {key = 1})"
        class="btn btn-outline-dark btn-secondary btn-light">Base Currency Desc.</a>
@@ -86,30 +58,6 @@
         </div>
     </div>
 }
-
-@*<select class="custom-select" name="basecurrency" id="BaseCurrencySelect">
-    <option selected>Base Currency</option>
-    <option value="1">TRY</option>
-    <option value="2">USD</option>
-    <option value="3">EUR</option>
-    <option value="4">GBP</option>
-    <option value="5">JPY</option>
-    <option value="6">CHF</option>
-    <option value="7">KWD</option>
-    <option value="8">RUB</option>
-</select>
-
-<select class="custom-select" name="quotecurrency" id="QuoteCurrencySelect">
-    <option selected>Quote Currency</option>
-    <option value="1">TRY</option>
-    <option value="2">USD</option>
-    <option value="3">EUR</option>
-    <option value="4">GBP</option>
-    <option value="5">JPY</option>
-    <option value="6">CHF</option>
-    <option value="7">KWD</option>
-    <option value="8">RUB</option>
-</select>*@
 
 <table class="table table-bordered table-hover">
     <tr>
