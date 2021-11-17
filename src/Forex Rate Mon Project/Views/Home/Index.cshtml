@@ -27,10 +27,9 @@
 {
     <div class="input-group mb-3">
         <div class="input-group-prepend">
+            <input type="text" class="form-control" name="exchangerate" id="exchangerate" style="margin-top: 10px; border-color: black" value="0" aria-label="Exchange Rate">
 
-            <input type="text" class="form-control" name="exchangerate" id="exchangerate" value="0" aria-label="Exchange Rate">
-
-            <select class="custom-select" name="basecurrency" id="basecurrency">
+            <select class="custom-select" name="basecurrency" style="margin-left:10px; margin-top:10px; border-color:black" id="basecurrency">
                 <option selected>Base Currency</option>
                 <option value="1">TRY</option>
                 <option value="2">USD</option>
@@ -42,7 +41,7 @@
                 <option value="8">RUB</option>
             </select>
 
-            <select class="custom-select" name="quotecurrency" id="quotecurrency">
+            <select class="custom-select" name="quotecurrency" style="margin-left: 10px; margin-top: 10px; border-color: black" id="quotecurrency">
                 <option selected>Quote Currency</option>
                 <option value="1">TRY</option>
                 <option value="2">USD</option>
@@ -53,8 +52,7 @@
                 <option value="7">KWD</option>
                 <option value="8">RUB</option>
             </select>
-
-            <button type="submit" class="btn btn-outline-dark btn-secondary btn-light">Search</button>
+            <button type="submit" class="btn btn-outline-dark btn-secondary btn-light" style="margin-left: 10px; margin-top: 10px; border-color: black">Search</button>
         </div>
     </div>
 }
