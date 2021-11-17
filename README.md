@@ -36,8 +36,12 @@ How this application works:
     This application has a worker service that continuously running and gettin current exchange rates every 30 min, between 9 A.M - 6 P.M. every day.
     
 It has one database with 2 different tables:
-    Currency Table with [CurrenyId][CurrencyName]
-    Exchange Rates Table with [ExchangeId][CurrencyId][CurrencyId][ExchangeRate][Date]
+
+Currency Table with [CurrenyId][CurrencyName]
+
+Exchange Rates Table with [ExchangeId][CurrencyId][CurrencyId][ExchangeRate][Date]
         
 ![image](https://user-images.githubusercontent.com/87266516/142195883-560a9c22-ecf5-4eff-848b-26b5050dcc09.png)
 
+### External Source:
+https://tradermade.com/market-data
