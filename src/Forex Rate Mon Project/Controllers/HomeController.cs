@@ -6,12 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Text.Json;
-using System.Net;
-using System.Configuration;
-using ApplicationCore.Entities;
 using Infastructure;
-using Infastructure.Data;
 using Infastructure.Repositories;
 using ApplicationCore.ViewModels;
 using Domain.ViewModels;
@@ -47,7 +42,7 @@ namespace Forex_Rate_Monitoring.Controllers {
         [HttpPost]
         public IActionResult Search(string exchangerate, string basecurrency, string quotecurrency)
         {
-            return RedirectToAction("FilteredTable", "Home", new { exchangerate = exchangerate, basecurrency = basecurrency, quotecurrency = quotecurrency});
+            return RedirectToAction("FilteredTable", "Home", new { exchangerate, basecurrency, quotecurrency});
         }
 
         [HttpGet]
