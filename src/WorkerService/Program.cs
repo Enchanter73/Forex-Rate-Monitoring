@@ -8,6 +8,7 @@ using Infastructure.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Infastructure.Repositories;
+using StackExchange.Redis;
 
 namespace WorkerService
 {
@@ -48,6 +49,13 @@ namespace WorkerService
                     services.AddDbContext<FER_Context>(options =>
                         options.UseSqlServer(hostContext.Configuration.GetConnectionString("ForexDB")));
                     services.AddScoped<Repository>();
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+                        string server = hostContext.Configuration["redis-server"];
+                        string port = hostContext.Configuration["redis-port"];
+                        string cnstring = $"{server}:{port}";
+                        options.Configuration = cnstring;
+                    });
                 });
     }
 }

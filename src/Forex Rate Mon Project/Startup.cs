@@ -25,6 +25,13 @@ namespace Forex_Rate_Monitoring {
             services.AddControllersWithViews();
             services.AddDbContext<FER_Context>(options => options.UseSqlServer(Configuration.GetConnectionString("ForexDB")));
             services.AddScoped<Repository>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                string server = Configuration["redis-server"];
+                string port = Configuration["redis-port"];
+                string cnstring = $"{server}:{port}";
+                options.Configuration = cnstring;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

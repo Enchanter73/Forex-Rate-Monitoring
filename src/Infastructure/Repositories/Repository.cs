@@ -1,8 +1,10 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,20 +16,22 @@ namespace Infastructure.Repositories
     public class Repository
     {
         protected readonly FER_Context _ctx;
+        private readonly IDistributedCache _cache;
 
-        public Repository(FER_Context ctx)
+        public Repository(FER_Context ctx, IDistributedCache cache)
         {
             _ctx = ctx;
+            _cache = cache;
         }
         public IList<Currency> GetCurrenciesFromDB()
-        {
+        {           
             List<Currency> currencies = _ctx.Currency.ToList();
             return currencies;
         }
 
         public ExchangeRateViewModel GetExchangeRatesFromDB(int from, int to)
         {
-            List<Currency> currencies = _ctx.Currency.ToList();
+            List<Currency> currencies = _ctx.Currency.ToList();           
             IEnumerable<ExchangeRateModel> ratesHistory = _ctx.ExchangeRates.ToList().Where(a => a.FromCurrency.CurrencyId == from && a.ToCurrency.CurrencyId == to);
             return new ExchangeRateViewModel()
             {
@@ -37,16 +41,28 @@ namespace Infastructure.Repositories
 
         public ExchangeRateViewModel GetCurrentExchangeRatesFromDB()
         {
-            List<ExchangeRateModel> exchangeRates = _ctx.ExchangeRates.ToList();
             IList<Currency> currencies = _ctx.Currency.ToList();
-
-            var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });
-
+            List<ExchangeRateModel> exchangeRates;           
             IList<ExchangeRateModel> result = new List<ExchangeRateModel>();
-            foreach (var x in currentRates)
+
+            if (_cache.Get("LiveExchangeRates") == null)
             {
-                result.Add(exchangeRates.Last(e => e.FromCurrency == x.Key.FromCurrency && e.ToCurrency == x.Key.ToCurrency));
+                exchangeRates = _ctx.ExchangeRates.ToList();
+                var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });
+
+                
+                foreach (var x in currentRates)
+                {
+                    result.Add(exchangeRates.Last(e => e.FromCurrency == x.Key.FromCurrency && e.ToCurrency == x.Key.ToCurrency));
+                }
+                //böyle çalışmıyo string
+                _cache.SetString("LiveExchangeRates", result.ToString());
             }
+            else
+            {
+                var rates = _cache.GetString("LiveExchangeRates");
+                result = JsonConvert.DeserializeObject<IList<ExchangeRateModel>>(rates);
+            }           
 
             return new ExchangeRateViewModel()
             {
