@@ -33,8 +33,21 @@ namespace Infastructure.Repositories
 
         public ExchangeRateViewModel GetExchangeRatesFromDB(int from, int to)
         {
-            List<Currency> currencies = _ctx.Currency.ToList();           
-            IEnumerable<ExchangeRateModel> ratesHistory = _ctx.ExchangeRates.ToList().Where(a => a.FromCurrency.CurrencyId == from && a.ToCurrency.CurrencyId == to);
+            IList<ExchangeRateModel> ratesHistory = new List<ExchangeRateModel>();
+            if (_cache.Get(from + "/" + to) == null)
+            {
+                List<Currency> currencies = _ctx.Currency.ToList();
+                ratesHistory = _ctx.ExchangeRates.ToList().Where(a => a.FromCurrency.CurrencyId == from && a.ToCurrency.CurrencyId == to).ToList();
+                _cache.Set(from + " / " + to, Serialization.ToByteArray(ratesHistory), new DistributedCacheEntryOptions()
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                });
+            }
+            else
+            {
+                ratesHistory = Serialization.FromByteArray<IList<ExchangeRateModel>>(_cache.Get(from + "/" + to));
+            }
+
             return new ExchangeRateViewModel()
             {
                 ExchangeRateModels = ratesHistory
@@ -42,14 +55,13 @@ namespace Infastructure.Repositories
         }
 
         public ExchangeRateViewModel GetCurrentExchangeRatesFromDB()
-        {
-            IList<Currency> currencies = _ctx.Currency.ToList();
-            List<ExchangeRateModel> exchangeRates;           
+        {                 
             IList<ExchangeRateModel> result = new List<ExchangeRateModel>();
 
             if (_cache.Get("LiveExchangeRates") == null)
             {
-                exchangeRates = _ctx.ExchangeRates.ToList();
+                IList<Currency> currencies = GetCurrenciesFromDB();
+                List<ExchangeRateModel> exchangeRates = _ctx.ExchangeRates.ToList();
                 var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });
                
                 foreach (var x in currentRates)
@@ -64,7 +76,7 @@ namespace Infastructure.Repositories
             else
             {
                 result = Serialization.FromByteArray<IList<ExchangeRateModel>>(_cache.Get("LiveExchangeRates"));
-            }           
+            }
 
             return new ExchangeRateViewModel()
             {
@@ -141,6 +153,7 @@ namespace Infastructure.Repositories
                 _ctx.ExchangeRates.Add(exchangeRateModel);
             }
             _ctx.SaveChanges();
+            _cache.Remove("LiveExchangeRates");
         }
     }
 }
