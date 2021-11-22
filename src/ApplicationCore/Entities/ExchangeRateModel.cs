@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.Entities
 {
+    [Serializable]
     public class ExchangeRateModel
     {
         public int ExchangeId { get; set; }

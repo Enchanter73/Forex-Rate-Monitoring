@@ -7,6 +7,7 @@ using System.Text;
 
 namespace ApplicationCore.Entities
 {
+    [Serializable]
     public class Currency
     {
         public int CurrencyId { get; set; }

@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.ViewModels;
+using Infastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Infastructure.Repositories
@@ -49,19 +51,19 @@ namespace Infastructure.Repositories
             {
                 exchangeRates = _ctx.ExchangeRates.ToList();
                 var currentRates = exchangeRates.GroupBy(x => new { x.FromCurrency, x.ToCurrency });
-
-                
+               
                 foreach (var x in currentRates)
                 {
                     result.Add(exchangeRates.Last(e => e.FromCurrency == x.Key.FromCurrency && e.ToCurrency == x.Key.ToCurrency));
                 }
-                //böyle çalışmıyo string
-                _cache.SetString("LiveExchangeRates", result.ToString());
+                _cache.Set("LiveExchangeRates", Serialization.ToByteArray(result), new DistributedCacheEntryOptions()
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                });
             }
             else
             {
-                var rates = _cache.GetString("LiveExchangeRates");
-                result = JsonConvert.DeserializeObject<IList<ExchangeRateModel>>(rates);
+                result = Serialization.FromByteArray<IList<ExchangeRateModel>>(_cache.Get("LiveExchangeRates"));
             }           
 
             return new ExchangeRateViewModel()
