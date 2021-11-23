@@ -38,7 +38,7 @@ namespace Infastructure.Repositories
             {
                 List<Currency> currencies = _ctx.Currency.ToList();
                 ratesHistory = _ctx.ExchangeRates.ToList().Where(a => a.FromCurrency.CurrencyId == from && a.ToCurrency.CurrencyId == to).ToList();
-                _cache.Set(from + " / " + to, Serialization.ToByteArray(ratesHistory), new DistributedCacheEntryOptions()
+                _cache.Set(from + "/" + to, Serialization.ToByteArray(ratesHistory), new DistributedCacheEntryOptions()
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
                 });
