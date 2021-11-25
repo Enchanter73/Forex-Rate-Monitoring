@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infastructure", "src\Infast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log", "Log\Log.csproj", "{6605A163-CB5C-4D3C-A627-E04FCB37DE02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cache", "Cache\Cache.csproj", "{61CA79AB-B991-4C03-8A5B-7086ECA96BC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6605A163-CB5C-4D3C-A627-E04FCB37DE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6605A163-CB5C-4D3C-A627-E04FCB37DE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6605A163-CB5C-4D3C-A627-E04FCB37DE02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61CA79AB-B991-4C03-8A5B-7086ECA96BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61CA79AB-B991-4C03-8A5B-7086ECA96BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61CA79AB-B991-4C03-8A5B-7086ECA96BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61CA79AB-B991-4C03-8A5B-7086ECA96BC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

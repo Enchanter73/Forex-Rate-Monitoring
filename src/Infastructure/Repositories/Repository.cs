@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.ViewModels;
+using Cache;
 using Infastructure.Extensions;
 using Infastructure.Helpers;
 using Log;
@@ -19,10 +20,10 @@ namespace Infastructure.Repositories
 {
     public class Repository
     {
-        protected readonly FER_Context _ctx;
-        private readonly IDistributedCache _cache;
+        protected readonly FER_Context _ctx;        
+        private readonly CacheManager _cache;
 
-        public Repository(FER_Context ctx, IDistributedCache cache)
+        public Repository(FER_Context ctx, CacheManager cache)
         {
             _ctx = ctx;
             _cache = cache;

@@ -11,6 +11,7 @@ using Infastructure.Repositories;
 using StackExchange.Redis;
 using WorkerService.Helpers;
 using Log;
+using Cache;
 
 namespace WorkerService
 {
@@ -64,7 +65,7 @@ namespace WorkerService
                         string cnstring = $"{server}:{port}";
                         options.Configuration = cnstring;
                     });
-                    //services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect());
+                    services.AddSingleton<CacheManager>();
                 });
     }
 }

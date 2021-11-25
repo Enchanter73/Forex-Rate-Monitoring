@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Infastructure.Repositories;
 using Infastructure;
+using Cache;
 
 namespace Forex_Rate_Monitoring {
     public class Startup {
@@ -34,6 +35,7 @@ namespace Forex_Rate_Monitoring {
                 string cnstring = $"{server}:{port}";
                 options.Configuration = cnstring;
             });
+            services.AddSingleton<CacheManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
