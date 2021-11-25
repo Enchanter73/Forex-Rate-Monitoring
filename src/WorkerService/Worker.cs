@@ -1,4 +1,5 @@
 using Infastructure.Repositories;
+using Log;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,18 +12,17 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using WorkerService.Helpers;
 
 namespace WorkerService
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IConfiguration _configuration;
 
-        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IConfiguration configuration)
+        public Worker(IServiceProvider serviceProvider, IConfiguration configuration)
         {
-            _logger = logger;
             _serviceProvider = serviceProvider;
             _configuration = configuration;
         }
@@ -37,13 +37,26 @@ namespace WorkerService
 
             t = t.Hours < -9 ? startDate.AddDays(1).Subtract(now) : t.Hours < 0 ? (t.Minutes < -30 ? TimeSpan.FromMinutes(60 + t.Minutes) : TimeSpan.FromMinutes(30+t.Minutes)) : startDate.AddDays(2).Subtract(now);
 
+            LogHelper.Log(new LogModel()
+            {
+                EventType = Enums.LogType.Info,
+                Message = "Worker.ExecuteAsync",
+                MessageDetail = "Worker waiting to start looping",
+                CreationDate = DateTime.Now
+            });
             await Task.Delay((t.Hours*3600 + t.Minutes*60 + t.Seconds)*1000, stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
-            {        
-                _logger.LogInformation("Worker running at: {time}", DateTime.Now);
+            {
+                LogHelper.Log(new LogModel()
+                {
+                    EventType = Enums.LogType.Info,
+                    Message = "Worker.ExecuteAsync",
+                    MessageDetail = "Worker Service started looping",
+                    CreationDate = DateTime.Now
+                });
 
-                using(IServiceScope scope = _serviceProvider.CreateScope())
+                using (IServiceScope scope = _serviceProvider.CreateScope())
                 {
                     var repo = scope.ServiceProvider.GetRequiredService<Repository>();
                     await getData(url, repo);
@@ -57,14 +70,29 @@ namespace WorkerService
 
         public static async Task getData(string url, Repository repo)
         {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client
-                .GetAsync(url);
+            try
+            {
+                HttpClient client = new HttpClient();
+                HttpResponseMessage response = await client
+                    .GetAsync(url);
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            JObject result = JObject.Parse(responseBody);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                JObject result = JObject.Parse(responseBody);
 
-            repo.Add(result);
+                repo.Add(result);
+            } 
+            catch(Exception ex)
+            {
+                LogHelper.Log(new LogModel()
+                {
+                    EventType = Enums.LogType.Error,
+                    Message = "Worker.getData",
+                    MessageDetail = "An Error occurred while trying to get data from external API",
+                    CreationDate = DateTime.Now,
+                    Exception = ex
+                });
+            }
+
         }
     }
 }

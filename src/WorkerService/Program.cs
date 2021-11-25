@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Infastructure.Repositories;
 using StackExchange.Redis;
+using WorkerService.Helpers;
+using Log;
 
 namespace WorkerService
 {
@@ -35,8 +37,14 @@ namespace WorkerService
                 }
                 catch (Exception ex)
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred creating the DB.");
+                    LogHelper.Log(new LogModel()
+                    {
+                        EventType = Enums.LogType.Error,
+                        Message = "Program.CreateDbIfNotExists",
+                        MessageDetail = "An error occurred creating the DB.",
+                        CreationDate = DateTime.Now,
+                        Exception = ex
+                    });
                 }
             }
         }
@@ -56,6 +64,7 @@ namespace WorkerService
                         string cnstring = $"{server}:{port}";
                         options.Configuration = cnstring;
                     });
+                    //services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect());
                 });
     }
 }

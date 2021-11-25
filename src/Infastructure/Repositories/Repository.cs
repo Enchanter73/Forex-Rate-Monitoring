@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.ViewModels;
 using Infastructure.Extensions;
+using Infastructure.Helpers;
+using Log;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
@@ -26,9 +28,24 @@ namespace Infastructure.Repositories
             _cache = cache;
         }
         public IList<Currency> GetCurrenciesFromDB()
-        {           
-            List<Currency> currencies = _ctx.Currency.ToList();
-            return currencies;
+        {
+            try
+            {
+                List<Currency> currencies = _ctx.Currency.ToList();
+                return currencies;
+            }
+            catch(Exception ex)
+            {
+                LogHelper.Log(new LogModel()
+                {
+                    EventType = Enums.LogType.Error,
+                    Message = "Repository.GetCurrencis",
+                    MessageDetail = "An Error occured while getting Currency List from Database",
+                    CreationDate = DateTime.Now,
+                    Exception = ex
+                });
+                return null;
+            }
         }
 
         public ExchangeRateViewModel GetExchangeRatesFromDB(int from, int to)
@@ -41,6 +58,13 @@ namespace Infastructure.Repositories
                 _cache.Set(from + "/" + to, Serialization.ToByteArray(ratesHistory), new DistributedCacheEntryOptions()
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                });
+                LogHelper.Log(new LogModel()
+                {
+                    EventType = Enums.LogType.Cache,
+                    Message = "Repository.GetExchangeRatesFromDB",
+                    MessageDetail = "History Exchange Rates for " + currencies.First(i => i.CurrencyId == from).CurrencyName + " and " + currencies.First(i => i.CurrencyId == to).CurrencyName +  " are cached for 30 minutes",
+                    CreationDate = DateTime.Now,
                 });
             }
             else
@@ -71,6 +95,13 @@ namespace Infastructure.Repositories
                 _cache.Set("LiveExchangeRates", Serialization.ToByteArray(result), new DistributedCacheEntryOptions()
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                });
+                LogHelper.Log(new LogModel()
+                {
+                    EventType = Enums.LogType.Cache,
+                    Message = "Repository.GetCurrentExchangeRatesFromDB",
+                    MessageDetail = "Current Exchange Rates are cached for 30 minutes",
+                    CreationDate = DateTime.Now,
                 });
             }
             else
@@ -152,7 +183,28 @@ namespace Infastructure.Repositories
 
                 _ctx.ExchangeRates.Add(exchangeRateModel);
             }
-            _ctx.SaveChanges();
+            try
+            {
+                _ctx.SaveChanges();
+                LogHelper.Log(new LogModel()
+                {
+                    EventType = Enums.LogType.Info,
+                    Message = "Repository.Add",
+                    MessageDetail = "Database is updated successfully",
+                    CreationDate = DateTime.Now,
+                });
+            }    
+            catch(Exception ex)
+            {
+                LogHelper.Log(new LogModel()
+                {
+                    EventType = Enums.LogType.Error,
+                    Message = "Repository.Add",
+                    MessageDetail = "An Error occured while updating the database",
+                    CreationDate = DateTime.Now,
+                    Exception = ex
+                });
+            }
             _cache.Remove("LiveExchangeRates");
         }
     }
